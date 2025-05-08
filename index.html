@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>T.R.A.M - 議事録自動作成システム</title>
+    <meta name="description" content="音声ファイルから自動で議事録を作成するモバイル対応ウェブアプリ">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- PWA Support -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1a73e8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="T.R.A.M">
+    <link rel="apple-touch-icon" href="icons/icon-152x152.png">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-file-alt"></i> T.R.A.M</h1>
+            <p class="subtitle">議事録自動作成システム</p>
+        </header>
+
+        <section class="info-card primary">
+            <h2><i class="fas fa-info-circle"></i> T.R.A.Mとは？</h2>
+            <p>
+                <strong>T.R.A.M</strong> (<strong>Transform Recording into Actionable Minutes</strong>) は、音声ファイルを自動で文字起こしし、そのテキストから議事録を生成するシステムです。<br>
+                OpenAI API を活用して、正確かつ分かりやすい議事録を作成します。
+            </p>
+            <ul>
+                <li><i class="fas fa-microphone"></i> <strong>高精度文字起こし:</strong> 音声ファイルからテキストへ変換</li>
+                <li><i class="fas fa-file-alt"></i> <strong>自動議事録生成:</strong> 抽出したテキストを元に議事録を作成</li>
+                <li><i class="fas fa-save"></i> <strong>ローカル保存:</strong> 生成された議事録はデバイスに保存可能</li>
+                <li><i class="fas fa-mobile-alt"></i> <strong>モバイル対応:</strong> スマートフォンで完結</li>
+            </ul>
+        </section>
+
+        <section class="info-card success">
+            <h2><i class="fas fa-cogs"></i> 使い方</h2>
+            <h3><i class="fas fa-check-circle"></i> 3つの簡単ステップ</h3>
+            <ol>
+                <li>
+                    <i class="fas fa-key"></i> <strong>APIキーの設定</strong><br>
+                    OpenAI APIキーを入力してください。
+                </li>
+                <li>
+                    <i class="fas fa-microphone"></i> <strong>音声ファイルのアップロード</strong><br>
+                    対応フォーマット: MP3, WAV, M4A（最大25MB）
+                </li>
+                <li>
+                    <i class="fas fa-play"></i> <strong>「処理を開始」ボタンをタップ</strong><br>
+                    処理完了後、議事録がダウンロードできます
+                </li>
+            </ol>
+        </section>
+
+        <div class="workflow-container">
+            <div id="api-key-section" class="workflow-section active">
+                <h2><i class="fas fa-key"></i> APIキー設定</h2>
+                <div class="input-group">
+                    <label for="openai-api-key">OpenAI APIキー</label>
+                    <input type="password" id="openai-api-key" placeholder="sk-..." required>
+                    <button id="save-api-key" class="btn success"><i class="fas fa-save"></i> 保存</button>
+                </div>
+                <div class="key-status" id="key-status"></div>
+            </div>
+
+            <div id="audio-upload-section" class="workflow-section">
+                <h2><i class="fas fa-microphone"></i> 音声ファイルのアップロード</h2>
+                <div class="upload-area" id="upload-area">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>ここにファイルをドロップ<br>または</p>
+                    <label for="audio-file" class="btn primary">ファイルを選択</label>
+                    <input type="file" id="audio-file" accept="audio/mp3,audio/wav,audio/m4a,audio/mpeg" hidden>
+                </div>
+                <div class="file-info" id="file-info"></div>
+            </div>
+
+            <div id="processing-section" class="workflow-section">
+                <h2><i class="fas fa-cog fa-spin"></i> 処理中</h2>
+                <div class="progress-container">
+                    <div class="progress-bar" id="progress-bar">
+                        <div class="progress" id="progress"></div>
+                    </div>
+                    <div class="progress-status" id="progress-status">準備中...</div>
+                </div>
+            </div>
+
+            <div id="result-section" class="workflow-section">
+                <h2><i class="fas fa-file-alt"></i> 議事録</h2>
+                <div class="result-container">
+                    <div class="result-content" id="result-content"></div>
+                    <div class="result-actions">
+                        <button id="download-result" class="btn success"><i class="fas fa-download"></i> ダウンロード</button>
+                        <button id="copy-result" class="btn primary"><i class="fas fa-copy"></i> コピー</button>
+                        <button id="restart" class="btn secondary"><i class="fas fa-redo"></i> 新しい議事録を作成</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="workflow-buttons">
+                <button id="prev-step" class="btn secondary" disabled><i class="fas fa-arrow-left"></i> 前へ</button>
+                <button id="next-step" class="btn primary">次へ <i class="fas fa-arrow-right"></i></button>
+                <button id="start-process" class="btn success" style="display: none;"><i class="fas fa-play"></i> 処理を開始</button>
+            </div>
+        </div>
+        
+        <section class="info-card warning">
+            <h2><i class="fas fa-exclamation-triangle"></i> 注意事項</h2>
+            <ul>
+                <li><i class="fas fa-key"></i> <strong>APIキーについて:</strong> APIキーは端末に保存され、外部に送信されることはありません。</li>
+                <li><i class="fas fa-microphone"></i> <strong>音声ファイル:</strong> 大きなファイルの処理には時間がかかります。25MB以下のファイルを推奨します。</li>
+                <li><i class="fas fa-clock"></i> <strong>処理時間:</strong> 音声の長さや端末の性能によって処理時間が変わります。</li>
+            </ul>
+        </section>
+
+        <div class="installation-banner" id="install-banner" style="display: none;">
+            <p><i class="fas fa-download"></i> このアプリをホーム画面に追加できます</p>
+            <button id="install-app" class="btn primary">インストール</button>
+            <button id="close-install-banner" class="btn secondary"><i class="fas fa-times"></i></button>
+        </div>
+    </div>
+
+    <footer>
+        <p>T.R.A.M - Transform Recording into Actionable Minutes</p>
+        <p class="version">Version 1.0</p>
+    </footer>
+
+    <script src="app.js"></script>
+    <script>
+        // Service Workerの登録
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(registration => {
+                        console.log('ServiceWorker登録成功:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('ServiceWorker登録失敗:', error);
+                    });
+            });
+        }
+        
+        // PWAインストールバナーの処理
+        let deferredPrompt;
+        const installBanner = document.getElementById('install-banner');
+        const installBtn = document.getElementById('install-app');
+        const closeBannerBtn = document.getElementById('close-install-banner');
+        
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // インストールプロンプトを表示せずに保存
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // インストールバナーを表示
+            installBanner.style.display = 'flex';
+        });
+        
+        installBtn.addEventListener('click', () => {
+            // バナーを非表示
+            installBanner.style.display = 'none';
+            
+            // プロンプトを表示
+            deferredPrompt.prompt();
+            
+            // ユーザーの選択結果を取得
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('ユーザーがインストールを承諾しました');
+                } else {
+                    console.log('ユーザーがインストールを拒否しました');
+                }
+                deferredPrompt = null;
+            });
+        });
+        
+        closeBannerBtn.addEventListener('click', () => {
+            installBanner.style.display = 'none';
+        });
+    </script>
+</body>
+</html> 
