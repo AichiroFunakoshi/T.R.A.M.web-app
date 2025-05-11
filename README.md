@@ -8,12 +8,15 @@ T.R.A.M (**T**ransform **R**ecording into **A**ctionable **M**inutes) は、音�
 - 📑 **自動議事録生成**: 抽出したテキストを元に構造化された議事録を作成（OpenAI GPT-4o-mini使用）
 - 💾 **ローカル保存**: ブラウザのローカルストレージを活用し、セキュアに使用可能
 - 🖥️ **レスポンシブデザイン**: スマートフォンからデスクトップまで最適なUIを提供
+- 📱 **PWA対応**: ホーム画面に追加可能で、アプリライクな体験を提供
 
 ## 使用技術
 
 - HTML5, CSS3, JavaScript (ES6+)
 - OpenAI API (Whisper, GPT-4o-mini)
 - LocalStorage API
+- Progressive Web App (PWA)
+- Service Worker
 - レスポンシブウェブデザイン
 - ファイルAPI (ドラッグ&ドロップ, File Reader)
 
@@ -36,12 +39,26 @@ T.R.A.M (**T**ransform **R**ecording into **A**ctionable **M**inutes) は、音�
 
 ## インストール方法
 
+### ウェブブラウザ版
 このウェブアプリは特別なインストールは不要です。以下の手順でローカルで実行できます：
 
 1. リポジトリをクローンまたはダウンロード
 2. `index.html`をウェブブラウザで開く
 
-または、ウェブサーバーにファイルをアップロードして公開することも可能です。
+### PWAとしてインストール
+スマートフォンで以下の手順を実行すると、ホーム画面からアプリのように起動できます：
+
+1. Safariや Chrome でウェブサイトを開く
+2. ブラウザのメニューから「ホーム画面に追加」を選択
+3. アプリ名を確認して追加
+
+## デプロイ
+
+GitHub Pages を利用して公開することもできます：
+
+1. このリポジトリをフォーク
+2. GitHub の Settings → Pages で Branch を main に設定
+3. 提供されたURLからアクセス可能
 
 ## 注意事項
 
@@ -55,8 +72,8 @@ T.R.A.M (**T**ransform **R**ecording into **A**ctionable **M**inutes) は、音�
 
 ## 開発者
 
-- いなみねてつお
+このプロジェクトは有志によって開発されています。
 
 ---
 
-*T.R.A.M - 会議録作成の効率化をスマートフォンで* 
+*T.R.A.M - 会議録作成の効率化をスマートフォンで*
