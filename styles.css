@@ -21,6 +21,11 @@
     box-sizing: border-box;
 }
 
+html {
+    height: 100%;
+    -webkit-text-size-adjust: 100%;
+}
+
 body {
     font-family: 'Roboto', sans-serif;
     line-height: 1.6;
@@ -28,8 +33,10 @@ body {
     background-color: #f9f9f9;
     padding: 0;
     margin: 0;
+    min-height: 100vh;
     -webkit-tap-highlight-color: transparent;
     overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
 }
 
 .container {
@@ -37,6 +44,8 @@ body {
     max-width: 768px;
     margin: 0 auto;
     padding: 15px;
+    min-height: 100vh;
+    padding-bottom: 80px; /* PWAインストールバナー用のスペース */
 }
 
 header {
@@ -167,6 +176,8 @@ header h1 {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
+    touch-action: manipulation;
+    min-height: 44px; /* タッチターゲットの最小サイズ */
 }
 
 .btn i {
@@ -211,6 +222,8 @@ header h1 {
     display: flex;
     justify-content: space-between;
     margin-top: 30px;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
 .upload-area {
@@ -221,6 +234,11 @@ header h1 {
     transition: all 0.3s ease;
     cursor: pointer;
     margin-bottom: 15px;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .upload-area:hover, .upload-area.active {
@@ -244,6 +262,7 @@ header h1 {
     border-radius: var(--border-radius);
     margin-top: 15px;
     background-color: var(--secondary-light);
+    word-wrap: break-word;
 }
 
 .progress-container {
@@ -287,12 +306,15 @@ header h1 {
     margin-bottom: 20px;
     white-space: pre-line;
     -webkit-overflow-scrolling: touch;
+    font-size: 14px;
+    line-height: 1.6;
 }
 
 .result-actions {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
+    justify-content: center;
 }
 
 .installation-banner {
@@ -307,6 +329,7 @@ header h1 {
     justify-content: space-between;
     align-items: center;
     z-index: 1000;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .installation-banner p {
@@ -332,7 +355,18 @@ footer {
     margin-top: 5px;
 }
 
-/* Media Queries for bigger screens */
+/* iPadとタブレット向け */
+@media (min-width: 481px) and (max-width: 767px) {
+    .container {
+        padding: 20px;
+    }
+    
+    .workflow-container {
+        padding: 25px;
+    }
+}
+
+/* デスクトップ向け */
 @media (min-width: 768px) {
     .container {
         padding: 30px;
@@ -357,6 +391,10 @@ footer {
     .installation-banner {
         padding: 20px;
     }
+    
+    .result-content {
+        font-size: 16px;
+    }
 }
 
 /* Animation for loading */
@@ -369,6 +407,36 @@ footer {
     animation: spin 2s linear infinite;
 }
 
+/* スマホ向け最適化 */
+@media (max-width: 480px) {
+    .result-actions {
+        flex-direction: column;
+    }
+    
+    .workflow-buttons {
+        flex-direction: column;
+    }
+    
+    .workflow-buttons button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    .installation-banner {
+        flex-direction: column;
+        padding: 10px;
+    }
+    
+    .installation-banner p {
+        margin-bottom: 10px;
+        text-align: center;
+    }
+    
+    .installation-banner .btn.secondary {
+        margin-left: 0;
+    }
+}
+
 /* タッチデバイス向け最適化 */
 @media (hover: none) {
     .btn {
@@ -378,4 +446,4 @@ footer {
     input, button, select, textarea {
         font-size: 16px; /* 300ms delay防止 */
     }
-} 
+}
